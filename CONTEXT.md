@@ -18,6 +18,10 @@ _Avoid_: Subscriber, target
 An event in Cadence that causes one or more Notifications to be sent.
 _Avoid_: Notification event, hook
 
+**Actor**:
+The user whose action fired a Trigger. An Actor is never a Recipient of that Trigger's Notification.
+_Avoid_: Sender, source, author
+
 **Inbox**:
 The in-app feed where a Recipient sees their Notifications and their read state.
 _Avoid_: Feed, notification center, bell
