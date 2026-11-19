@@ -1,4 +1,12 @@
-import { Outlet } from "react-router";
+import { Outlet, useSearchParams } from "react-router";
+// PROTOTYPE (prototype/inbox-ui)
+import { PrototypeSwitcher } from "~/components/prototype-switcher";
+import {
+  INBOX_VARIANTS,
+  VariantAHeaderBell,
+  VariantBHeaderBell,
+  VariantCNavItemAndDrawer,
+} from "~/components/prototype-inbox/variants";
 import type { Route } from "./+types/layout.app";
 import { Sidebar } from "~/components/sidebar";
 import { DevUI } from "~/components/dev-ui";
@@ -226,6 +234,9 @@ export default function AppLayout({ loaderData }: Route.ComponentProps) {
     countries,
     isTeamAdmin: userIsTeamAdmin,
   } = loaderData;
+  const [searchParams] = useSearchParams();
+  const variant = searchParams.get("variant") ?? "A";
+  const showInbox = currentUser !== null;
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -233,6 +244,18 @@ export default function AppLayout({ loaderData }: Route.ComponentProps) {
         currentUser={currentUser}
         recentCourses={recentCourses}
         isTeamAdmin={userIsTeamAdmin}
+        headerSlot={
+          showInbox && variant === "A" ? (
+            <VariantAHeaderBell key={currentUser.id} />
+          ) : showInbox && variant === "B" ? (
+            <VariantBHeaderBell key={currentUser.id} />
+          ) : null
+        }
+        navTopSlot={
+          showInbox && variant === "C" ? (
+            <VariantCNavItemAndDrawer key={currentUser.id} />
+          ) : null
+        }
       />
       <main className="flex-1 overflow-y-auto">
         <Outlet />
@@ -244,6 +267,7 @@ export default function AppLayout({ loaderData }: Route.ComponentProps) {
         countryTierInfo={countryTierInfo}
         countries={countries}
       />
+      <PrototypeSwitcher variants={INBOX_VARIANTS} />
       <Toaster position="bottom-right" richColors closeButton />
     </div>
   );
